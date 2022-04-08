@@ -25,18 +25,40 @@ function RegisterComponent () {
         })
     }, []);
 
-    const handleChange = (e) => { 
-        setValue(e.target.val);
-    }
-
-    // const postData = async () => {
-    //     await RegisterService.sendUserInfo()
-    // }
-
     const postData = async (event) => {
         //console.log("aici");
         console.log(event);
         await RegisterService.sendUserInfo(event);
+    }
+
+    const handleRoute = (msg) => { 
+        navigate('/response', msg);
+    }
+
+    const handleChange = value => {
+        console.log("aici");
+        setDate(value);
+        setShowCalendar(false);
+    };
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        const { first_name, last_name, username, password, gender, city} = e.target.elements;
+
+        const birth_date = moment(date.toLocaleDateString(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+        console.log(birth_date);
+
+        const userInfo = { "first_name": first_name.value 
+                         , "last_name": last_name.value
+                         , "username": username.value
+                         , "password": password.value 
+                         , "gender": (gender.value == 'female') ? 'F' : 'M'
+                         , "city": city.value
+                         , "birth_date": birth_date};
+        console.log(userInfo);
+        RegisterService.sendUserInfo(userInfo)
+            .then( (response) => { navigate('/login');  /*navigate('/login');*/})
+            .catch( (error) => { alert("Could not register! Please try again!"); });
     }
 
     return (
@@ -73,7 +95,6 @@ function RegisterComponent () {
                                     <option value="male" placeholder="Gender" >Male</option>
                                 </select>
                             </div>
-
                             {/* <div className="div-inline">
                                 <select value={value} onChange={handleChange}>
                                 { 
@@ -85,7 +106,6 @@ function RegisterComponent () {
                                 }
                                 </select>
                             </div> */}
-
                             <div className="div-inline">
                                 <select value={value} name="city" key="city">
                                 { 
@@ -98,14 +118,23 @@ function RegisterComponent () {
                                 </select>
                             </div>
                         </div>
-
                         {/* <div className="info">
                             <div className="custom-control custom-checkbox">
                                 <input type="checkbox" className="custom-control-input" id="customCheck1" />
                                 <label className="custom-control-label" htmlFor="customCheck1">Remember me</label>
                             </div>
                         </div> */}
-
+                        <div className="calendar">
+                            <input
+                                value={date.toLocaleDateString()}
+                                onFocus={() => setShowCalendar(true)}
+                            />
+                            <Calendar 
+                                className={showCalendar ? "" : "hide"}
+                                value={date}
+                                onChange={handleChange}
+                            />
+                        </div>
                         <button type="submit" className="loginButton">SUBMIT</button>
                     </form>
                 </div>
