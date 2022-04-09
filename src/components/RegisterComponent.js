@@ -1,42 +1,25 @@
-// import { Navigation } from '@mui/icons-material';
 import React from 'react';
 import LocationService from '../services/LocationService';
-// import UserService from '../services/UserService';
-// import { useParams } from 'react-router-dom';
 import '../styles/Login.css';
-import RegisterService from '../services/RegisterService';
+import AuthService from '../services/auth/AuthService';
+import Calendar from 'react-calendar';
+import moment from 'moment';
+import { useNavigate } from 'react-router';
 
 function RegisterComponent () {
-
-    // const [countries, setCountries] = React.useState([]);
     const [cities, setCities] = React.useState([]);
-    const [value, setValue]= React.useState(2);
-    // const [date, onChange] = React.useState(new Date());
-
-    // React.useEffect(() => { 
-    //     LocationService.getCountries().then((response) => {
-    //         setCountries(response.data)
-    //     })
-    // }, []);
-
+    const [date, setDate] = React.useState(new Date());
+    const [showCalendar, setShowCalendar] = React.useState(false);
+    const navigate = useNavigate();
+  
     React.useEffect(() => { 
-        LocationService.getCitiesByCountry(value).then((response) => {
+        LocationService.getCities().then((response) => {
             setCities(response.data);
         })
+        .catch(error => {alert(error);})
     }, []);
 
-    const postData = async (event) => {
-        //console.log("aici");
-        console.log(event);
-        await RegisterService.sendUserInfo(event);
-    }
-
-    const handleRoute = (msg) => { 
-        navigate('/response', msg);
-    }
-
     const handleChange = value => {
-        console.log("aici");
         setDate(value);
         setShowCalendar(false);
     };
@@ -52,62 +35,52 @@ function RegisterComponent () {
                          , "last_name": last_name.value
                          , "username": username.value
                          , "password": password.value 
-                         , "gender": (gender.value == 'female') ? 'F' : 'M'
-                         , "city": city.value
-                         , "birth_date": birth_date};
-        console.log(userInfo);
-        RegisterService.sendUserInfo(userInfo)
-            .then( (response) => { navigate('/login');  /*navigate('/login');*/})
-            .catch( (error) => { alert("Could not register! Please try again!"); });
+                         , "gender": (gender.value === 'female') ? 'F' : 'M'
+                         , "city": Number(city.value)
+                         , "birth_date": birth_date.toString()};
+
+        AuthService.register(userInfo)
+            .then( (response) => { navigate('/login'); })
+            .catch( (error) => { alert("Error on register: " + error) }); 
     }
 
     return (
         <div className="background">
             <div className="register">
                 <div className="content">
-                    <form onSubmit={postData}>
+                    <form onSubmit={handleSubmit}>
                         <h3>Register</h3>
 
                         <div className="register-info">
                             {/* <label>Email address</label> */}
-                            <input type="first_name" key="first_name" placeholder="First name" />
+                            <input type="first_name" id="first_name" placeholder="First name"/>
                         </div>
 
                         <div className="register-info">
                             {/* <label>Email address</label> */}
-                            <input type="last_name" key="last_name" placeholder="Last name" />
+                            <input type="last_name" id="last_name" placeholder="Last name"/>
                         </div>
 
                         <div className="register-info">
                             {/* <label>Password</label> */}
-                            <input type="email" key="email" placeholder="Email" />
+                            <input type="email" id="username" placeholder="Email"/>
                         </div>
 
                         <div className="register-info">
                             {/* <label>Password</label> */}
-                            <input type="password" key="password" placeholder="Enter password" />
+                            <input type="password" id="password" placeholder="Enter password"/>
                         </div>
 
                         <div className="register-info-div"> 
                             <div className="div-inline">
-                                <select name="gender" key="gender">
+                                <select name="gender" id="gender"  >
                                     <option value="female" placeholder="Gender" >Female</option>
                                     <option value="male" placeholder="Gender" >Male</option>
                                 </select>
                             </div>
-                            {/* <div className="div-inline">
-                                <select value={value} onChange={handleChange}>
-                                { 
-                                    countries.map(
-                                        (country, key) => {
-                                            return <option value={`${country.id}`}> {country.name}</option>
-                                        }
-                                    )
-                                }
-                                </select>
-                            </div> */}
+
                             <div className="div-inline">
-                                <select value={value} name="city" key="city">
+                                <select name="city" id="city"  >
                                 { 
                                     cities.map(
                                         (city, key) => {
@@ -118,12 +91,7 @@ function RegisterComponent () {
                                 </select>
                             </div>
                         </div>
-                        {/* <div className="info">
-                            <div className="custom-control custom-checkbox">
-                                <input type="checkbox" className="custom-control-input" id="customCheck1" />
-                                <label className="custom-control-label" htmlFor="customCheck1">Remember me</label>
-                            </div>
-                        </div> */}
+
                         <div className="calendar">
                             <input
                                 value={date.toLocaleDateString()}
@@ -135,6 +103,7 @@ function RegisterComponent () {
                                 onChange={handleChange}
                             />
                         </div>
+
                         <button type="submit" className="loginButton">SUBMIT</button>
                     </form>
                 </div>
