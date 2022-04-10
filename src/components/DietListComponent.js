@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import DietService from '../services/DietService'
 import DietItem from './DietItem';
 import "../styles/DietList.css";
@@ -8,15 +7,9 @@ const DietListComponent = (props) => {
 
     const [diets, setDiets] = React.useState([]);
 
-    // JUST FOR TESTING
-    const getData = () => {
-        axios.get('http://localhost:8080/diets').then(res => {
-          console.table(res.data)
-        })
-    }
-
     React.useEffect(() => { 
         DietService.getDiets().then((response) => {
+            console.log(response.data);
             setDiets(response.data)
         })
     }, []);
@@ -28,7 +21,7 @@ const DietListComponent = (props) => {
                 {
                     diets.map(
                         (diet, key) => {
-                            return <DietItem id={diet.id} image={diet.image} name={diet.name} price={diet.price}/>
+                            return <DietItem key={diet.key} id={diet.id} image={diet.image} name={diet.name} price={diet.price}/>
                         }
                     )
                 }
