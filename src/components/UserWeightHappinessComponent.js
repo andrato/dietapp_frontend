@@ -1,46 +1,98 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import UserService from '../services/UserService';
 import {NavLink} from 'react-router-dom';
 import { Slider } from '@mui/material';
-
+import { useNavigate } from 'react-router';
 import '../styles/User.css';
+import HappinessService from '../services/HappinessService';
+import WeightService from '../services/WeightService';
 
 function UserWeightHappinessComponent(props) {
 
     let { id } = useParams(); 
 
-    const [user, setUser] = React.useState('');
+    const [happiness, setHappiness] = React.useState('');
+    const navigate = useNavigate();
+    const is_admin = localStorage.getItem("is_admin");
+
     
-    React.useEffect(() => { 
-        UserService.getUserById(id).then((response) => {
-            setUser(response.data);
-        })
-    }, '');
+    // React.useEffect(() => { 
+    //     UserService.getUserById(id).then((response) => {
+    //         setUser(response.data);
+    //     })
+    // }, '');
 
-    function handleChange (e) {
-        console.log(e.target.value);
+    function handleHappiness(e) {
+        setHappiness(e.target.value);
+    }
 
+    function handleSubmit(e) {
+        e.preventDefault();
+        const { weight } = e.target.elements;
+        // const date = new Date();
+        // const date_now = moment(date.toLocaleDateString(), 'DD/MM/YYYY').format('YYYY-MM-DD HH:mm:ss');
+    
+        const happinessObj = {
+            value: happiness,
+            userId: Number(id)
+        }
 
+        const weightObj = {
+            value: Number(weight.value),
+            userId: Number(id)
+        }
+        
+        let ok = false;
+        if(happiness !=='') {
+            ok = true;
+            HappinessService.setHappiness(happinessObj)
+                .then( (response) => { console.log('E bine pe happiness'); })
+                .catch( (error) => { alert(error); }); //"An error occured! Please try again later!"
+        }
+
+        if(Number(weight.value) < 400 && Number(weight.value) >= 30){
+            ok = true;
+            WeightService.setWeight(weightObj)
+                .then( (response) => { console.log('E bine pe weight');  })
+                .catch( (error) => { alert("An error occured! Please try again later!"); console.log(error); });
+        }
+
+        console.log(ok);
+        if(ok === true) {
+            // setTimeout(navigate(`/users/${id}`), 1000); 
+            // wait so that 
+            setTimeout(() => {  navigate(`/users/${id}`); }, 1000);
+        }
+        else {
+            alert("No valid changes made! Cannot submit");
+        }
     }
 
     return (
-        <div className="all, all_same">
+        <div className="all">
             <div className="one">
                 <div className="nav">
                     <NavLink to={`/users/${id}`} className="inactive"> Account Info </NavLink>
                     <NavLink to={`/users/${id}/updates`} className="active"> Updates </NavLink>
                     <NavLink to={`/users/${id}/diets`} className="inactive"> My diets </NavLink>
+                    {is_admin!="false" && <div className="line"></div>}
+                    {is_admin!="false" &&<NavLink to={`/users/${id}/allusers`} className="inactive"> All users </NavLink>}
+                    {is_admin!="false" &&<NavLink to={`/users/${id}/alldiets`} className="inactive"> All diets </NavLink>}
+                    {is_admin!="false" &&<NavLink to={`/users/${id}/allbillings`} className="inactive"> All billings </NavLink>}
+                    <div className="line"></div>
+                </div>
+                <div className="logout">
+                    <NavLink to={`/logout`} className="inactive"> Log out </NavLink>
                 </div>
             </div>
 
-            <div className="all_same, two">
+            <div className="two" id="weight-and-happiness">
                 <div>
                     <h2>Updates</h2>
                     <p id="info">*Please, send constant updates, so you can keep track of your progress</p>
-                    <form onSubmit={handleChange}>
-                        <p>Weight</p>
-                        <input placeholder="kg" type="number" min={30} max={400}></input>
+                    <form onSubmit={handleSubmit}>
+                        <p>Weight:</p>
+                        <input placeholder="kg" type="number" min={30} max={400} id="weight"/>
 
                         {/* <Slider
                             size="small"
@@ -48,8 +100,8 @@ function UserWeightHappinessComponent(props) {
                             aria-label="Small"
                             valueLabelDisplay="auto"
                             /> */}
-                        <p>Happiness level</p>
-                        <Slider defaultValue={50} aria-label="Default" valueLabelDisplay="auto"/>
+                        <p>Happiness level:</p>
+                        <Slider defaultValue={50} aria-label="Default" valueLabelDisplay="auto" onChange={handleHappiness}/>
                         <div className="userButton">
                             <button type="submit" className="loginButton">SUBMIT</button>
                         </div>
