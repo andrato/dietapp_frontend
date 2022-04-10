@@ -1,12 +1,17 @@
 import axios from 'axios';
+import authHeader from './auth/AuthHeader';
 
 class UserService {
-    getUserById(id){
-        return axios.get(`http://localhost:8080/users/${id}`);
+    getUsers() {
+        return axios.get(`http://localhost:8080/users/`);
     }
 
-    login() {
-        return axios.get(`http://localhost:8080/login`);
+    login(obj) {
+        return axios.post(`http://localhost:8080/auth/login`, obj);
+    }
+
+    getUserById(id){
+        return axios.get(`http://localhost:8080/users/${id}`);
     }
 }
 
