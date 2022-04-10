@@ -7,11 +7,6 @@ class AuthService {
   }
 
   getUserByUsername(username) {
-    // const token2 = JSON.parse(localStorage.getItem('user_token'));
-    // console.log("getUserByUsername - " + token2);
-    // const access_token = { "Authorization":  token2 };
-    // console.log(access_token);
-    // console.log(authHeader());
     return axios.get(`http://localhost:8080/users/username?request=${username}`);
   }
 

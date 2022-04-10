@@ -5,14 +5,15 @@ import './App.css';
 import NavbarComponent from './components/NavbarComponent';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Diets from './pages/Diets';
-import Diet from './pages/Diet';
+import DietComponent from './components/DietComponent';
 import DietListTypeComponent from './components/DietListTypeComponent';
-import User from './pages/User';
 import LoginComponent from './components/LoginComponent';
 import RegisterComponent from './components/RegisterComponent';
 import UserComponent from './components/UserComponent';
 import UserDietsComponent from './components/UserDietsComponent';
 import UserWeightHappinessComponent from './components/UserWeightHappinessComponent';
+import UserFormComponent from './components/UserFormComponent';
+import LogoutComponent from './components/LogoutComponent';
 
 function App() {
   return (
@@ -20,8 +21,8 @@ function App() {
       <Router>
         <NavbarComponent />
         <Routes>
-          <Route path='/' element={<Diets/>} />
-          <Route path='/diet/:id' element={<Diet />} />
+        <Route path='/' element={<Diets/>} />
+          <Route path='/diet/:id' element={<DietComponent />} />
           <Route path='/dietType/:id' element={<DietListTypeComponent/>} />
           {/* <Route path='/user/:id' element={<Diet />} /> */}
           <Route path='/login' element={<LoginComponent />} />
@@ -29,6 +30,8 @@ function App() {
           <Route path='/users/:id' element={<UserComponent />} />
           <Route path='/users/:id/diets' element={<UserDietsComponent />} />
           <Route path='/users/:id/updates' element={<UserWeightHappinessComponent />} />
+          <Route path='/users/:id/form' element={<UserFormComponent />} />
+          <Route path='/logout' element={<LogoutComponent />} />
         </Routes>
       </Router>
     </div>
