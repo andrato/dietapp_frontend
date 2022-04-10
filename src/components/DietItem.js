@@ -1,23 +1,23 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
-// import {Link, NavLink} from 'react-router-dom';
 import Image from "../assets/1.jpeg";
 
-export default function DietItem({id, image, name, price}) {
+export default function DietItem({key, id, image, name, price}) {
 
-    image = Image;
+    const user_id = localStorage.getItem("user_id");
     const navigate = useNavigate();
+    image = Image;
   
     const handleRoute = () => { 
         navigate(`/diet/${id}`);
     }
 
-    const handleCart = () => {
-        navigate('/');
+    function handleBuy() {
+
     }
 
     return (
-        <div className="menuItem" >
+        <div className="menuItem">
             <div onClick={handleRoute}>
                 <div style={{ backgroundImage: `url(${image})` }}>
                 </div>
@@ -25,7 +25,7 @@ export default function DietItem({id, image, name, price}) {
             </div>
             <div className="item-end">
                 <div id="price">{price}LEI</div>
-                <div id="buton"><button className="btn btn-primary" onClick={handleCart}>Buy</button></div>
+                <div id="buton"><button className="btn btn-primary" onClick={handleBuy}>Buy</button></div>
             </div>
         </div>
     )

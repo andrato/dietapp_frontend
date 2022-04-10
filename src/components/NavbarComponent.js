@@ -45,9 +45,6 @@ function NavbarComponent(props) {
                     <ReorderIcon />
                 </button>
             </div>
-            {/* <div className="endNav" id="beforeIcons">
-                <Link to={'/cart'}> <FiShoppingCart /> </Link>
-            </div>   */}
             <div className="endNav" id="afterIcons">
                 <Link to={'/login'}> <FiUser /> </Link>
             </div>  
