@@ -31,7 +31,6 @@ function DietComponent (props){
     React.useEffect(() => { 
         FoodService.getFoodsByDiet(id).then((response) => {
             setFoods(response.data);
-            // console.log(response.data);
         })
     },[id]);
 
@@ -124,7 +123,7 @@ function DietComponent (props){
                             {
                                 foods.map(
                                     (food, key) => {
-                                        if(food.category === "BREAKFAST") {
+                                        if(food.foodCategoryId === 1) {
                                             return <FoodItem id={food.id} name={food.name} calories={food.calories} shouldBuy={showButton}/>
                                         }else {
                                             return ''
@@ -138,7 +137,7 @@ function DietComponent (props){
                             {
                                 foods.map(
                                     (food, key) => {
-                                        if(food.category === "LUNCH"){
+                                        if(food.foodCategoryId === 2){
                                             return <FoodItem id={food.id} name={food.name} calories={food.calories} shouldBuy={showButton}/>
                                         }else {
                                             return ''
@@ -152,7 +151,7 @@ function DietComponent (props){
                             {
                                 foods.map(
                                     (food, key) => {
-                                        if(food.category === "DINNER"){
+                                        if(food.foodCategoryId === 3){
                                             return <FoodItem id={food.id} name={food.name} calories={food.calories} shouldBuy={showButton}/>
                                         }else {
                                             return '';
@@ -166,7 +165,7 @@ function DietComponent (props){
                             {
                                 foods.map(
                                     (food, key) => {
-                                        if(food.category === "SNACKS"){
+                                        if(food.foodCategoryId === 4){
                                             return <FoodItem id={food.id} name={food.name} calories={food.calories} shouldBuy={showButton}/>
                                         }else {
                                             return ''
