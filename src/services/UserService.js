@@ -1,4 +1,6 @@
 import axios from 'axios';
+import authHeader from './auth/AuthHeader';
+
 class UserService {
     getUsers() {
         return axios.get(`http://localhost:8080/users/`);
@@ -15,6 +17,18 @@ class UserService {
 
     getUserById(id){
         return axios.get(`http://localhost:8080/users/${id}`);
+    }
+
+    getUsers() {
+        return axios.get(`http://localhost:8080/users/`);
+    }
+
+    deleteUser(id) {
+        return axios.delete(`http://localhost:8080/users/${id}`);
+    }
+
+    changeUserRights(id) {
+        return axios.put(`http://localhost:8080/users/changeAdmin?id=${id}`)
     }
 }
 
